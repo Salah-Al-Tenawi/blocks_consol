@@ -13,7 +13,7 @@ abstract class LogicGame {
   });
 
   List<Cell> canPlacePeice(Piece piece, Cell cell);
-   placePiece(Piece piece, Cell cell);
+  placePiece(Piece piece, Cell cell);
   backMove();
   bool canbackMove();
   bool isWin();
@@ -32,7 +32,9 @@ class LogicGameIM extends LogicGame {
     int x = cell.coordinates.x;
     for (int i = 0; i < piece.blocks.length; i++) {
       if (piece.blocks[i].cord.y + y < field.height &&
-          piece.blocks[i].cord.x + x < field.width) {
+          piece.blocks[i].cord.x + x < field.width &&
+          piece.blocks[i].cord.y + y >= 0 &&
+          piece.blocks[i].cord.x + x >= 0) {
         if (field.cells[piece.blocks[i].cord.y + y][piece.blocks[i].cord.x + x]
                 .type ==
             0) {
@@ -41,24 +43,28 @@ class LogicGameIM extends LogicGame {
         }
       }
     }
-
-    return checkCells;
+    if (checkCells.length == piece.blocks.length) {
+      return checkCells;
+    }
+    return [];
   }
 
   @override
-  placePiece(Piece piece, Cell cell) {
-    
+  bool placePiece(Piece piece, Cell cell) {
     Map<String, dynamic> oneMove;
     List<Cell> list = canPlacePeice(piece, cell);
-    if (list.isNotEmpty) {
-      for (var item in list) {
-        item.type = 1;
-      }
+    if (list.isEmpty) {
+      return false;
+    }
+
+    for (var item in list) {
+      item.type = 1;
     }
 
     oneMove = {"cells": list, "peice": piece};
     allMoves.add(oneMove);
     pieces.remove(piece);
+    return true;
   }
 
   @override
