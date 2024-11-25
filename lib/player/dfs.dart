@@ -33,6 +33,7 @@ class DfsAlgo {
     if (gameState.isGaol()) {
       print(" number of visited state   =$visitedCount");
       return true;
+      
     }
 
     for (var piece in game.pieces) {
